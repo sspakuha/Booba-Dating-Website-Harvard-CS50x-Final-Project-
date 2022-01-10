@@ -1,0 +1,187 @@
+{% extends "loggedLayout.html" %}
+
+{% block title %} Conversations {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/messages.min.css') }}">
+{% endblock %}
+
+{% block messages %}active{% endblock %}
+
+{% block body %}
+<div class="main__body">
+	<div class="messages">
+		<div class="messages__body">
+			<div class="messages__left {% if recipient %}active{% endif %}">
+				<div class="title search">
+					<input id="search" type="text" name="username" placeholder="Search" autocomplete="off">
+				</div>
+				<div class="messages__users user">
+          {% if recipient %}
+          	<div class="user__card active" id="{{ recipient.id }}">
+						  <div class="user__image">
+                <img src="{{ url_for('static', filename=recipient.userpic[7:]) }}" alt="">
+                <i class="status-indicator"></i>
+						  </div>
+						  <div class="user__body">
+							  <div class="user__name">
+								  {{ recipient.username }}
+						  	</div>
+                <div class="user__message">
+								  <div class="user__message-content">
+              	    <div class="user__message-you" {% if recipient.lastmsg.from_uid and recipient.lastmsg.from_uid == user.id  %}style="display: inline;"{% endif %}>
+										  <b>You:</b>
+									  </div>
+									  <div class="user__message-msg">
+                      {% if recipient.lastmsg %}
+										    {{ recipient.lastmsg.content[:22] }}...
+                      {% endif %}
+									  </div>
+								  </div>
+								  <div class="user__message-status">
+                  {% if recipient.lastmsg.status and recipient.lastmsg.status == 0 %}
+									<i class="fas fa-check"></i>
+                  {% else %}
+                  <i class="fas fa-check-double"></i>
+                  {% endif %}
+								  </div>
+							  </div>
+					    </div>
+				  	</div>
+          {% endif %}
+          {% if conversations %}
+            {% for dialog in conversations %}
+            {% if not recipient or not dialog.username == recipient.username %}
+					  <div class="user__card{% if not dialog.lastmsg.from_uid == user.id and dialog.lastmsg.status == 0 %} new{% endif %}" {% if not dialog.lastmsg.from_uid == user.id %} id="{{ dialog.lastmsg.from_uid }}"{% else %} id="{{ dialog.lastmsg.to_uid }}"{% endif %}>
+						  <div class="user__image">
+                <img src="{{ url_for('static', filename=dialog.photo[7:]) }}" alt="">
+                <i class="status-indicator"></i>
+						  </div>
+						  <div class="user__body">
+							  <div class="user__name">
+								  {{ dialog.username }}
+						  	</div>
+              <div class="user__message">
+								<div class="user__message-content">
+                  <div class="user__message-content">
+              	    <div class="user__message-you" {% if dialog.lastmsg.from_uid == user.id  %}style="display: inline;"{% endif %}>
+										  <b>You:</b>
+									  </div>
+									  <div class="user__message-msg">
+										  {{ dialog.lastmsg.content[:22] }}...
+									  </div>
+								  </div>
+								</div>
+								<div class="user__message-status">
+                  {% if dialog.lastmsg.status == 0 %}
+									<i class="fas fa-check"></i>
+                  {% else %}
+                  <i class="fas fa-check-double"></i>
+                  {% endif %}
+								</div>
+							</div>
+					  	</div>
+				  	</div>
+            {% endif %}
+            {% endfor %}
+          {% elif not recipient %}
+          <div style="color: white; font-size: 24px; font-family: Roboto; padding: 5px 5px; text-align: center;">You don't have any dialogs.</div>
+          {% endif %}
+				</div>
+
+			</div>
+			<div class="messages__right {% if recipient %}active{% endif %}">
+				<div class="title">
+          <div class="titleblock">
+						  <div class="userpicture">
+                {% if recipient %}
+                <img src="{{ url_for('static', filename=recipient.userpic[7:]) }}" alt="">
+                {% endif %}
+                <i class="status-indicator"></i>
+					  	</div>
+				  	<div class="username">
+						{% if recipient %}
+              <a href="/{{ recipient.username }}" style="color: inherit;">{{ recipient.username }}</a>
+            {% endif %}
+
+				  	</div>
+					</div>
+
+          <a id="lastseen"></a>
+
+					<div class="close" {% if not recipient %}style="display:none;"{% endif %} >
+            <a><i class="fas fa-times" style="color: black;"></i>
+            </a>
+					</div>
+
+				</div>
+				<div class="messages__right-body">
+					<div class="messages__right-messages">
+						<div class="messages__container">
+              {% if recipient %}
+                {% if "messages" in recipient %}
+                  {% for message in recipient.messages %}
+							  <div class="messages__message message" id="msg{{ message.id }}">
+							      <div class="message__img">
+                      {% if message.from_uid == user.id %}
+                      <img src="{{ url_for('static', filename=recipient.authpic[7:]) }}" alt="">
+                      {% else %}
+                      <img src="{{ url_for('static', filename=recipient.userpic[7:]) }}" alt="">
+                      {% endif %}
+							      </div>
+							      <div class="message__block">
+							      	<div class="message_top">
+							      		<div class="message__name">
+                          {% if message.from_uid == user.id %}
+                          <a href="/{{ user.username }}">{{ user.username }}</a>
+                          {% else %}
+                          <a href="/{{ recipient.userlogin }}">{{ recipient.userlogin }}</a>
+
+                          {% endif %}
+                          </div>
+							      	</div>
+							      	<div class="message__text">
+							      		{{ message.content }}
+							      	</div>
+							      </div>
+                    <div class="message__time">
+									    <div>
+                        {{ message.time[:16] }}
+                      </div>
+									  <div class="message__status">
+                    {% if message.status == 0 %}
+										<i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-check-double"></i>
+                    {% endif %}
+									</div>
+								</div>
+
+
+							  </div>
+                {% endfor %}
+                {% else %}
+                  <p style="font-size: 16px; color: white; margin-top: 20px; font-family: Roboto;">You don't have any message history with {{ recipient.username }}. Why don't you start now?</p>
+                {% endif %}
+              {% else %}
+              <div style="font-size: 30px; color: white; text-align: center; font-family: Roboto; display: flex; align-items: center; height: 100%;"><i class="fas fa-hand-point-left" style="font-size: 100px; margin-right: 10px;"></i>Click on a dialog</div>
+              {% endif %}
+						</div>
+
+					</div>
+
+					<div class="messages__right-send" {% if not recipient %}style="display: none;"{% endif %}>
+						<input type="text" name="message" placeholder="Write a message..." autocomplete="off" id="content">
+						<button id="send">Send</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/messages.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,478 @@
+{% extends "loggedLayout.html" %}
+
+{% block title %} {{ page.username }} {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="./static/css/profile.min.css">
+<link rel="stylesheet" href="./static/css/modal.min.css">
+{% endblock %}
+
+{% block profile %}active{% endblock %}
+
+{% block body %}
+        <div class="modal" style="display: none;">
+          <div class="modal__darken">
+					</div>
+					<div class="modal__body">
+						<div class="modal__image">
+							<div class="modal__arrow modal__arrow-l">
+                <i class="fas fa-chevron-left"></i>
+							</div>
+							<img id="image" src="" alt="" >
+							<div class="modal__arrow modal__arrow-r">
+                <i class="fas fa-chevron-right"></i>
+							</div>
+
+						</div>
+            {% if page.id == user.id %}
+						<div class="modal__buttons">
+							<div class="modal__button">
+              <form method="post" action="/deletepicture" style="display: none;">
+							<input type="hidden" name="picid" id="picid" value="">
+              <input type="hidden" name="pagelogin" id="pagelogin" value="{{ page.username }}">
+              <input type="submit" id="btnsubmit" value="" style="display: none;">
+              </form>
+								<a onclick="document.getElementById('btnsubmit').click()" class="modal__link">Delete</a>
+							</div>
+							<div class="modal__button">
+              <form method="post" action="/setavatar" style="display: none;">
+							  <input type="hidden" name="picidavatar" id="picidavatar" value="">
+                <input type="hidden" name="pagelogin" id="pagelogin" value="{{ page.username }}">
+                <input type="submit" id="btnsubmitavarar" value="" style="display: none;">
+              </form>
+								<a onclick="document.getElementById('btnsubmitavarar').click()" class="modal__link">Set as profile picture</a>
+							</div>
+						</div>
+            {% endif %}
+					</div>
+				</div>
+				<div class="main__body">
+        <div class="modal-conf">
+          <div class="modal-conf__darken"></div>
+						<div class="modal-conf__body">
+							<div class="modal-conf__modal">
+								<div class="modal-conf__text">
+                  {% if not tabs["likes"] %}
+									<p>Like costs 75 coins. Do you want to proceed?</p>
+									<p>Your balance is: {{ user.balance }} <i class="fas fa-money-bill-alt"></i></p>
+                  {% else %}
+									<p>You already liked this person. Unliking will not return any coins. </p>
+									<p>Are you sure?</p>
+                  {% endif %}
+								</div>
+								<div class="modal-conf__buttons">
+									<a class="modal-conf__button" id="cancel-modal">
+										Cancel
+									</a>
+									<a class="modal-conf__button modal-conf__button-y" id="confirm-like">
+										Confirm
+									</a>
+								</div>
+							</div>
+						</div>
+				</div>
+					<section class="sextion-left">
+						<div class="sextion-left__images images">
+							<div class="images__big">
+								<div class="images__big-img">
+                  <img src="./{{ avatar }}" alt="">
+								</div>
+                {% if page.id == user.id %}
+								<form method="post" enctype="multipart/form-data" action="/avatar" class="avatar-form">
+								  <input type="file" name="avatar" id="avatar" class="avatar-input" onchange="form.submit()">
+                </form>
+                <a onclick="document.getElementById('avatar').click()" style="cursor: pointer;width:100%; height: 100%;"><div class="images__big-plus">+</div></a>
+                {% endif %}
+							</div>
+						</div>
+
+            {% if not page.username == user.username %}
+            <div class="profile__buttons buttons">
+							<div class="buttons__body">
+								<a class="buttons__btn msg"><i class="fas fa-envelope"></i> Message</a>
+                <form method="post" action="/messages" style="display: none;">
+							    <input type="hidden" name="username" value="{{ page.username }}">
+                </form>
+								<a class="buttons__btn" id="favorite">{% if tabs["favorites"] %}<i class="far fa-star"></i> Unfavorite{% else %}<i class="fas fa-star"></i> Favorite{% endif %}</a>
+								<a class="buttons__btn" id="like">{% if tabs["likes"] %}<i class="far fa-heart"></i> Unlike{% else %}<i class="fas fa-heart"></i> Like{% endif %}</a>
+							</div>
+						</div>
+            {% endif %}
+
+						<div class="sextion-left__profiledata profiledata">
+							<div class="profiledata__body" style="height: auto;">
+								<div class="profiledata__title profiledata__title-c">
+									<a href="#" class="profiledata__text"><b>{{ page.username }}</b></a>
+
+                  <i class="online-indicator" {% if online and online == 1 or page.username == user.username %}style="display: inline;"{% endif %}></i>
+
+
+                  {% if page.username == user.username %}
+                  <a id="leftdata" class="cp">
+									  <div class="profiledata__edit">
+											<i class="fas fa-pencil-alt"></i>
+                      <i style="display: none;" class="fas fa-times"></i>
+										</div>
+									</a>
+                  {% endif %}
+								</div>
+                <div class="profiledata__content" id="contenthide" style="display: none;">
+                  <form class="leftdata-update" action="/updatedataleft" method="POST">
+										<label for="country">Country: </label>
+										<input id="country" autocomplete="off" class="leftdata-update__input" type="text" value="{% if location.country %}{{ location.country }}{% endif %}" name="country">
+										<label for="city">City: </label>
+										<input id="city" autocomplete="off" class="leftdata-update__input" type="text" value="{% if location.city %}{{ location.city }}{% endif %}" name="city">
+                    <label for="age">Age: </label>
+										<input id="age" autocomplete="off" class="leftdata-update__input" type="number" min="18" max="123" value="{{ user.age }}" name="age">
+										<div class="leftdata-update__select">
+											<div>You are</div>
+											<select name="sex">
+                        {% if page.gender_id == 1 %}
+												<option value="1" selected>Male</option>
+												<option value="2">Female</option>
+                        {% else %}
+                        <option value="1">Male</option>
+												<option value="2" selected>Female</option>
+                        {% endif %}
+											</select>
+										</div>
+										<div class="leftdata-update__select">
+											<div class="">You look for</div>
+											<select name="lookingfor">
+                        {% if lookingfor.gender_id == 1 %}
+												<option value="1" selected>Male</option>
+												<option value="2">Female</option>
+                        {% else %}
+                        <option value="1">Male</option>
+												<option value="2" selected>Female</option>
+                        {% endif %}
+											</select>
+										</div>
+										<div class="leftdata-update__btngroup">
+											<button type="button" class="leftdata-update__btn maindata__btn" onclick="$('#leftdata').click();">Cancel</button>
+											<input class="leftdata-update__btn maindata__btn" type="submit" value="Save">
+										</div>
+									</form>
+                </div>
+
+								<div class="profiledata__content" id="contentshow">
+                  {% if location.country %}
+                  <p><b>Country:</b> {{ location.country }}</p>
+                  {% else %}
+                  <p><b>Country:</b> Unset</p>
+                  {% endif %}
+                    <br>
+									{% if location.city %}
+                  <p><b>City:</b> {{ location.city }}</p>
+                  {% else %}
+                  <p><b>City:</b> Unset</p>
+                  {% endif %}
+                  <br>
+                  <p><b>Age:</b> {{ page.age }}</p>
+                  <br>
+                  <p><b>Sex:</b> {% if page.gender_id == 1 %} Male {% else %} Female {% endif %}</p>
+                  <br>
+                  <p><b>Intrested in:</b> {% if lookingfor.gender_id == 1 %} Male {% else %} Female {% endif %}</p>
+
+                  <br>
+								</div>
+							</div>
+						</div>
+
+					</section>
+
+					<section class="sextion-right">
+						<div class="sextion-right__profiledata profiledata">
+							<div class="profiledata__body profiledata__body-t" style="height: auto;">
+								<div class="profiledata__title profiledata__title-c">
+									<a class="profiledata__text active"><i
+											class="fas fa-id-card profiledata__title-p"></i>About</a>
+
+                  {% if online and online == 1 or page.username == user.username %}
+                  <a class="profiledata__text" id="lastseen" style="font-size: 14px;">Currently online</a>
+                  {% elif online %}
+                  <a class="profiledata__text" id="lastseen" style="font-size: 14px;">Last seen: {{ online.day }}/{{ online.month }} {{ online.hour | time }}:{{ online.minute | time }}</a>
+                  {% endif %}
+
+
+                  {% if page.username == user.username %}
+                  <a id="maindata" class="cp">
+									  <div class="profiledata__edit">
+											<i class="fas fa-pencil-alt"></i>
+                      <i style="display: none;" class="fas fa-times"></i>
+										</div>
+									</a>
+                  {% endif %}
+								</div>
+                <div class="profiledata__content" id="maincontenthide" style="display: none;">
+                  <form class="maindata" method="post" action="/profiledata">
+                    <textarea type="text" name="description" rows="6" maxlength="450" class="maindata_txtar" value="{% if page.about %}{{ page.about }}{% endif %}" style="overflow: hidden;" onkeyup="limitTextarea(this,6,450)"></textarea>
+                    <div class="maindata__buttons">
+                      <button class="maindata__btn" type="button" style="display: block;" onclick="$('#maindata').click();">Cancel</button>
+                      <input class="maindata__btn" type="submit" id="maindataSubmit" value="Save">
+                    </div>
+                  </form>
+                </div>
+								<div class="profiledata__content" id="maincontentshow">
+                  {% if page.about %}
+                    <pre style="font-family: Roboto;">{{ page.about }}</pre>
+                  {% elif page.id == user.id %}
+                  Please change your profile data by clicking on a pencil.
+                  {% else %}
+                  {{ page.username }} has nothing to say...
+                  {% endif %}
+								</div>
+							</div>
+						</div>
+
+            	<div class="images__small small">
+                {% if page.id == user.id %}
+                <form method="post" enctype="multipart/form-data" action="/addpicture" class="avatar-form">
+								  <input type="file" name="picture" id="addpicture" class="avatar-input" onchange="form.submit()">
+                </form>
+								  <a class="small__plus" onclick="document.getElementById('addpicture').click()">
+								  	+
+                  </a>
+
+                  {% if picamount < 5 %}
+                    {% for image in images %}
+                    <div class="small__main content__image">
+                      <img src="./{{ image.url }}" alt="{{ image.id }}">
+                    </div>
+                    {% endfor %}
+                  {% else %}
+                    {% for i in range(4) %}
+                    <div class="small__main content__image">
+                      <img src="./{{ images[i].url }}" alt="{{ images[i].id }}">
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+                  {% if picamount > 0 %}
+                    <a href="/{{ page.username }}/images" class="small__plus" style="color: black;">
+                    ...
+                    </a>
+                  {% endif %}
+                {% else %}
+                {% if picamount > 0 %}
+                  {% if picamount <= 5 %}
+                    {% for image in images %}
+                    <div class="small__main content__image">
+                      <img src="./{{ image.url }}" alt="{{ image.id }}">
+                    </div>
+                    {% endfor %}
+                  {% else %}
+                    {% for i in range(4) %}
+                    <div class="small__main content__image">
+                      <img src="./{{ images[i].url }}" alt="{{ images[i].id }}">
+                    </div>
+                    {% endfor %}
+                    <a href="/{{ page.username }}/images" class="small__plus" style="color: black;">
+                    ...
+                    </a>
+                  {% endif %}
+                  {% else %}
+                 <p style="color: white; padding: 5px; font-family: Roboto; font-size: 18px;">User hasn't uploaded any pictures yet.</p>
+                {% endif %}
+
+
+                {% endif %}
+							</div>
+
+            {% if page.id == user.id %}
+						<div class="sextion-right__profiledata profiledata profiledata-t">
+							<div class="profiledata__body profiledata__body-t">
+								<div class="profiledata__title profiledata__title-f">
+									<div id="tabtrigger" data-target="1" class="profiledata__text active"><i
+											class="fas fa-star profiledata__title-p"></i>Favorite</div>
+									<div id="tabtrigger" data-target="2" class="profiledata__text "><i
+											class="fas fa-eye profiledata__title-p"></i>Visitors</div>
+									<div id="tabtrigger" data-target="3" class="profiledata__text "><i
+											class="fas fa-heart profiledata__title-p"></i>Likes</div>
+								</div>
+								<div class="profiledata__content profiledata__content-tab">
+									<div id="favorites" class="tab">
+                    {% if tabs["favorites"] %}
+                    {% for favorite in tabs["favorites"] %}
+                    <div class="tab__itemflex">
+
+										<div class="tab__item">
+											<div class="tab__image">
+                        <a href="/{{ favorite.username }}">
+                          <img src="./{{ favorite.url }}" alt="">
+                        </a>
+
+											</div>
+											<div class="tab__info">
+												<div class="tab__username">
+                          <a href="/{{ favorite.username }}" style="color: white;">
+                            {{ favorite.username }}
+                          </a>
+												</div>
+												<div class="tab__block">
+													<a class="tab__link" id="unfavorite"><i class="far fa-star"></i>
+														Unfavorite</a>
+													<a class="tab__link msg"><i class="far fa-envelope"></i>
+														Message</a>
+                          <form method="post" action="/messages" style="display: none;">
+							              <input type="hidden" name="username" value="{{ favorite.username }}">
+                          </form>
+												</div>
+											</div>
+										</div>
+
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p style="padding: 10px;">You don't have any profiles in your favorites.</p>
+                    {% endif %}
+									</div>
+                  <div id="visitors" class="tab" style="display: none;">
+                    {% if tabs["visitors"] %}
+                    {% for visitor in tabs["visitors"] %}
+                    <div class="tab__itemflex">
+										<div class="tab__item">
+											<div class="tab__image">
+                        <a href="/{{ visitor.username }}">
+                            <img src="./{{ visitor.url }}" alt="">
+                        </a>
+											</div>
+											<div class="tab__info">
+												<div class="tab__username">
+                          <a href="/{{ visitor.username }}" style="color: white;">
+                            {{ visitor.username }}
+                          </a>
+												</div>
+												<div class="tab__block">
+                          <a class="tab__link" style="cursor: default;">
+                            {{ visitor.time.hour | time }}:{{ visitor.time.minute | time }} - {{ visitor.time.day | time }}/{{ visitor.time.month | time }}/{{ visitor.time.year }}
+                          </a>
+													<a class="tab__link msg" ><i class="far fa-envelope"></i>
+														Message</a>
+                          <form method="post" action="/messages" style="display: none;">
+							              <input type="hidden" name="username" value="{{ visitor.username }}">
+                          </form>
+												</div>
+											</div>
+										</div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p style="padding: 10px;">You don't have any visitors... yet!</p>
+                    {% endif %}
+									</div>
+                  <div id="likes" class="tab" style="display: none;">
+                    {% if tabs["likes"] %}
+                    {% for like in tabs["likes"] %}
+                    <div class="tab__itemflex">
+										<div class="tab__item">
+											<div class="tab__image">
+                        <a href="/{{ like.username }}">
+                            <img src="./{{ like.url }}" alt="">
+                        </a>
+											</div>
+											<div class="tab__info">
+												<div class="tab__username">
+                          <a href="/{{ like.username }}" style="color: white;">
+                            {{ like.username }}
+                          </a>
+												</div>
+												<div class="tab__block">
+                          <a class="tab__link" style="cursor: default; margin-top: -10px">Liked you</a>
+													<a class="tab__link msg" style="margin-top: 5px;"><i class="far fa-envelope"></i>
+														Message</a>
+                          <form method="post" action="/messages" style="display: none;">
+							              <input type="hidden" name="username" value="{{ like.username }}">
+                          </form>
+												</div>
+											</div>
+										</div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p style="padding: 10px;">You don't have any likes... yet!</p>
+                    {% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+            {% endif %}
+
+            {% if page.id == user.id %}
+						<div class=" sextion-right__profiledata profiledata">
+							<div class="profiledata__body profiledata__body-z">
+								<div class="profiledata__title">
+									<a class="profiledata__text active"><i
+											class="fas fa-gift profiledata__title-p"></i>Daily rewards</a>
+                  </div>
+									<div class="profiledata__rewards rewards">
+
+                  <div class="rewards__darken" {% if gift %}style="display: none;"{% endif %}>
+										<div class="rewards__timeout"><i class="fas fa-lock"></i>
+											<p></p>
+										</div>
+									</div>
+
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+                    <div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+                    <div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+                    <div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+										<div class="rewards__gift">
+											<i class="fas fa-gift profiledata__title-p"></i>
+											<div class="nos">
+                      </div>
+										</div>
+								</div>
+							</div>
+						</div>
+            {% endif %}
+				</div>
+				</section>
+			</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="./static/js/limitlines.js"></script>
+<script src="./static/js/profile.js"></script>
+<script src="./static/js/modal.js"></script>
+{% endblock %}

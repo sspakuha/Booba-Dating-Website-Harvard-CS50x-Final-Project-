@@ -1,0 +1,175 @@
+{% extends "loggedLayout.html" %}
+
+{% block title %} Search {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="./static/css/search.min.css">
+{% endblock %}
+
+{% block search %}active{% endblock %}
+
+{% block body %}
+<div class="main__body">
+	<div class="search">
+		<div class="search__body">
+			<div class="search__title">
+				<a class="search__text active"><i class="fas fa-search search__title-p"></i>
+					Search</a>
+			</div>
+			<form action="/search" method="GET">
+			<div class="search__content content">
+				<div class="content__sectionleft sectionleft">
+					<div class="sectionleft__hidden">
+            <p><i class="fas fa-angle-double-left"></i></p>
+					</div>
+					<div class="sectionleft__body">
+						<div class="sectionleft__title">
+							Search criterias
+						</div>
+						<hr>
+						<div class="sectionleft__criterias">
+							<div class="sectionleft__grp">
+								<label for="country">Country</label>
+								<input type="text" autocomplete="off" id="country" name="country" placeholder="Country" {% if setting["country"] %}value="{{ setting['country']}}"{% endif %}>
+							</div>
+							<div class="sectionleft__grp">
+								<label for="city">City</label>
+								<input type="text" autocomplete="off" id="city" name="city" placeholder="City" {% if setting["city"] %}value="{{ setting['city']}}"{% endif %}>
+							</div>
+							<div class="sectionleft__grp">
+								<div class="sectionleft__grp-title">
+									Gender:
+								</div>
+								<div class="sectionleft__grp-radio">
+									<label>
+										<input type="radio" id="radio" name="gender" value="1" {% if setting["gender"] == 1 %}checked{% endif %}>
+										<i class="indicator"><span></span></i>
+										<label for="male">Male</label>
+									</label>
+
+								</div>
+								<div class="sectionleft__grp-radio">
+									<label>
+										<input type="radio" id="radio" name="gender" value="2" {% if setting["gender"] == 2 %}checked{% endif %}>
+										<i class="indicator"><span></span></i>
+										<label for="female">Female</label>
+									</label>
+								</div>
+								<div class="sectionleft__grp-radio">
+									<label>
+										<input type="radio" id="radio" name="gender" value="0" {% if not setting["gender"] == 1 and not setting["gender"] == 2 %}checked{% endif %} >
+										<i class="indicator"><span></span></i>
+										<label for="any">Any</label>
+									</label>
+								</div>
+							</div>
+							<hr>
+							<div class="sectionleft__grp">
+								<div class="sectionleft__grp-check">
+									<label id="chkbx">
+										<input type="checkbox" id="hasphoto" name="hasphoto" value="1" {% if setting["hasphoto"] == 1 %}checked{% endif %}>
+										<span></span>
+										<i class="indicator"></i>
+										<label for="hasphoto">with photo</label>
+									</label>
+
+								</div>
+							</div>
+							<hr>
+							<div class="sectionleft__grp" id="slider">
+								<div class="sectionleft__grp-title sectionleft__grp-title-r">
+									Age:
+								</div>
+								<div class='range-slider'>
+									<input type="range" min="18" name="lowerage" max="123" step="1" v-model="sliderMin">
+									<input type="number" min="18" id="lowernum" max="123" step="1" v-model="sliderMin" {% if setting["lowerage"] %}value="{{ setting['lowerage'] }}"{% endif %}>
+									---
+									<input type="range" min="18" name="upperage" max="123" step="1" v-model="sliderMax">
+									<input type="number" min="18" id="uppernum" max="123" step="1" v-model="sliderMax" {% if setting["upperage"] %}value="{{ setting['upperage'] }}"{% endif %}>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+        </form>
+				<div class="content__sectionright sectionright">
+					<div class="sectionright__body">
+						<div class="sectionright__top">
+							<div class="sectionright__title">
+								Enter username
+							</div>
+							<div class="sectionright__search">
+								<input id="searchfield" maxlength="25" type="text" placeholder="Username" autocomplete="off" name="query"
+									id="username" {% if setting["query"] %}value="{{ setting['query'] }}"{% endif %}>
+								<button type="submit">Search</button>
+                <button type="button" id="options" class="options">Search criterias</button>
+							</div>
+						</div>
+						<hr style="margin-left: 40px; margin-right: 40px;">
+						<div class="users">
+              {% if searching %}
+                {% if result %}
+                {% for i in range(length) %}
+              <div class="users__body">
+								<div class="users__left">
+									<a class="users__image" href="/{{result[i].username}}">
+										<img src="./{{ images[i] }}" alt="">
+									</a>
+									<div class="users__block">
+										<a class="users__login" href="/{{result[i].username}}">
+											{{ result[i].username }}
+										</a>
+										<a class="users__item">
+											Age: {{ result[i].age }}
+										</a>
+										<a class="users__item">
+											Sex: {% if result[i].gender_id  == 1 %}Male{% else %}Female{% endif %}
+										</a>
+										<a class="users__item">
+                      {% if locations[i] != "Unset" %}Country: {{ locations[i] }}{% endif %}
+										</a>
+									</div>
+								</div>
+
+								<div class="users__block users__block-f">
+									<a class="users__item users__item-h" id="favorite" style="cursor: pointer;">
+                    {% if result[i].id in favorites %}
+										<i class="far fa-star"></i>
+									  Unfavorite
+                    {% else %}
+										<i class="fas fa-star"></i>
+										Favorite
+                    {% endif %}
+									</a>
+									<a class="users__item users__item-h msg" style="cursor: pointer;">
+										<i class="fas fa-envelope"></i>
+										Write message
+									</a>
+<form method="POST" action="/messages" style="display: none;">
+<input type="hidden" name="username" value="{{ result[i].username }}">
+</form>
+								</div>
+							</div>
+                {% endfor %}
+                {% else %}
+                <p style="color: white; font-family: Roboto; font-size: 22px; font-weight: 300;">No user found.</p>
+                {% endif %}
+              {% endif %}
+						</div>
+              {% if length and length >= 10 %}
+              <div class="users__buttonmore">
+								<a class="users__buttonlink" id="loadmore">Load more...</a>
+							</div>
+              {% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x"></script>
+<script src="./static/js/search.js"></script>
+{% endblock %}

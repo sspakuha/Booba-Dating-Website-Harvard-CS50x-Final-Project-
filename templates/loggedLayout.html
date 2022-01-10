@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>{% block title %} {% endblock %}</title>
+
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7"
+	 crossorigin="anonymous">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mainframe.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/header.min.css') }}">
+  <style>
+    :root{
+      --first: rgba(177, 177, 177, 0.603);
+ 	    --second: rgba(55, 55, 55, 0.83);
+ 	    --third: rgba(100, 100, 100, 0.6);
+      --active: RGBA(255, 93, 22, 0.5);
+      --new: rgba(130, 130, 130, 1);
+      --styleone: rgba(255, 140, 40, 0.8);
+      --styletwo: rgba(235, 130, 130, 0.8);
+    }
+
+  </style>
+
+  {% block styles %}
+  {% endblock %}
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="bg">
+			<picture>
+        <img src="{{ url_for('static', filename='img/1231231.jpg') }}" alt="background" style="object-fit: cover; object-position: center;">
+    </div>
+      <div class="bg__darken" style="background-color: rgba(0, 0, 0, 0.1)">
+	  </div>
+  <header class="header" id="navbar">
+	  <div class="header__body">
+		  <div class="header__logo">
+			  <a href="/"><picture><source srcset=" {{ url_for('static', filename='img/logobooba.webp') }}" type="image/webp"><img src=" {{ url_for('static', filename='img/logobooba.png') }}" alt=""></picture></a>
+		  </div>
+		  <div class="icon-menu">
+			  <span></span>
+			  <span></span>
+			  <span></span>
+		  </div>
+		  <div class="header__main">
+			  <ul class="header__menu menu">
+				  <li><a href="/{{ user.username }}" class="menu__item {% block profile %}{% endblock %}"><i class="fas fa-user"></i>Your Profile</a></li>
+				  <li><a href="/messages" class="menu__item {% block messages %}{% endblock %}"><i class="fas fa-envelope"></i>Messages</a></li>
+				  <li><a href="/search" class="menu__item {% block search %}{% endblock %}"><i class="fas fa-search"></i>Search</a></li>
+				  <li class="menu__item-dop"><a class="menu__item balance-c"><i class="fas fa-money-bill-alt"></i>Balance:
+						<b id="balance">{{ user.balance }}</b></a></li>
+				  <li class="menu__item-dop"><a href="/settings" class="menu__item"><i class="fas fa-user-cog"></i>Settings</a></li>
+				  <li class="menu__item-dop"><a href="/logout" class="menu__item menu__item-l"><i
+							class="fas fa-sign-out-alt"></i>Log out</a></li>
+				  <li class="menu__item-z" id="menu">
+					  <a href="{{ url_for('index') }}" class="menu__item-menu" style="font-weight: 600;">{{ user.username }}</a>
+					  <ul class="menu__menus hidein">
+						  <li><a class="menu__item menu__item-h balance-c"><i class="fas fa-money-bill-alt"></i>Balance:
+								<b id="balance1">{{ user.balance }}</b></a></li>
+						  <li><a class="menu__item menu__item-h" href="/settings"><i class="fas fa-user-cog"></i>Settings</a></li>
+						  <li><a class="menu__item menu__item-h" href="/logout"><i class="fas fa-sign-out-alt"></i>Log out</a></li>
+					  </ul>
+				  </li>
+			  </ul>
+		  </div>
+	  </div>
+  </header>
+
+		<main class="main">
+			<div class="_container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for color, message in messages %}
+        	<div class="flash" style="text-align: center; color: white; margin-bottom: 30px; padding: 15px 0px; font-family: Arial; font-size: 20px; background-color: {{ color }}; border-radius: 5px;">
+					{{ message }}
+				  </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+        {% block body %}
+        {% endblock %}
+			<footer class="footer">
+	<div class="footer__body">
+		<ul class="footer__list">
+      <li class="footer__item footer__link">Harvard CS50 2021 final project</li>
+		</ul>
+		<ul class="footer__ilist">
+			<li class="footer__iitem"><a href="https://www.facebook.com/" class="footer__link" target="_blank"><i class="fab fa-facebook-square"></i></a></li>
+			<li class="footer__iitem"><a href="https://twitter.com/" class="footer__link" target="_blank"><i class="fab fa-twitter-square"></i></a></li>
+			<li class="footer__iitem"><a href="https://www.instagram.com/" class="footer__link" target="_blank"><i class="fab fa-instagram-square"></i></a></li>
+		</ul>
+	</div>
+</footer>
+	</div>
+	</main>
+	</div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+  {% block scripts %}
+  {% endblock %}
+</body>
+
+</html>

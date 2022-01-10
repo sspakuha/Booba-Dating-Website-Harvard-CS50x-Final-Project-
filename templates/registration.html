@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %} Registration {% endblock %}
+
+{% block button %}
+<a href="/login" class="header__signin"> Log In </a>
+{% endblock %}
+
+{% block body %}
+<div class="right__body">
+  {% if get_flashed_messages() %}
+    <div class="error errorz"> {{ get_flashed_messages() | join(" ") }}</div>
+  {% endif %}
+  <div class="right__title">
+		Sign up by answering <br> a few questions:
+	</div>
+	<div class="right__question">You are</div>
+	  <button data-answ1="1" class="right__option">Male</button>
+	  <button data-answ1="2" class="right__option">Female</button>
+	</div>
+	<div class="right__body right__body-1">
+    <div class="right__title" style="color: rgba(0,0,0, 0.2)">
+		  Sign up by answering <br> a few questions:
+	  </div>
+		<div class="right__question">
+      You look for
+    </div>
+		<button data-answ1="1" class="right__option">Male</button>
+		<button data-answ1="2" class="right__option">Female</button>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="./static/js/script.js"></script>
+{% endblock %}

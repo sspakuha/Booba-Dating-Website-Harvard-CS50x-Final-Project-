@@ -1,0 +1,79 @@
+{% extends "loggedLayout.html" %}
+
+{% block title %} {{ page.username }} photos {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/images.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.min.css') }}">
+{% endblock %}
+
+{% block body %}
+				<div class="modal" style="display: none;">
+          <div class="modal__darken">
+					</div>
+					<div class="modal__body">
+						<div class="modal__image">
+							<div class="modal__arrow modal__arrow-l">
+                <i class="fas fa-chevron-left"></i>
+							</div>
+							<img id="image" src="./img/223.jpg" alt="">
+							<div class="modal__arrow modal__arrow-r">
+                <i class="fas fa-chevron-right"></i>
+							</div>
+
+						</div>
+            {% if page.id == user.id %}
+						<div class="modal__buttons">
+							<div class="modal__button">
+              <form method="post" action="/deletepicture" style="display: none;">
+							<input type="hidden" name="picid" id="picid" value="">
+              <input type="hidden" name="pagelogin" id="pagelogin" value="{{ page.username }}">
+              <input type="submit" id="btnsubmit" value="" style="display: none;">
+              </form>
+								<a onclick="document.getElementById('btnsubmit').click()" class="modal__link">Delete</a>
+							</div>
+							<div class="modal__button">
+              <form method="post" action="/setavatar" style="display: none;">
+							  <input type="hidden" name="picidavatar" id="picidavatar" value="">
+                <input type="hidden" name="pagelogin" id="pagelogin" value="{{ page.username }}">
+                <input type="submit" id="btnsubmitavarar" value="" style="display: none;">
+              </form>
+								<a onclick="document.getElementById('btnsubmitavarar').click()" class="modal__link">Set as profile picture</a>
+							</div>
+						</div>
+            {% endif %}
+					</div>
+				</div>
+
+
+				<div class="main__body">
+					<div class="images">
+						<div class="images__body">
+							<div class="images__title">
+								<a class="images__text active"><i class="far fa-images images__title-p"></i>
+									Images</a>
+								<a href="../{{ page.username }}"><i style="color: white;">{{ page.username }}</i></a>
+								<a href="../{{ page.username }}">Go back</a>
+							</div>
+							<div class="images__content content">
+                {% if images %}
+                {% for image in images %}
+							  	<div class="content__image" style="cursor: pointer;">
+                    <img src="{{ url_for('static', filename=image.url[7:]) }}" alt="{{ image.id }}">
+							  	</div>
+                {% endfor %}
+                {% else %}
+                <p>User doesn't have any uploaded pictures yet.</p>
+                {% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+{% endblock %}

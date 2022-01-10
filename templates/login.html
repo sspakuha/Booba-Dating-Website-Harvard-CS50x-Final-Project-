@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block button %}
+<a href="/register" class="header__signin"> Sign Up </a>
+{% endblock %}
+
+{% block body %}
+<div class="right__body">
+    {% if get_flashed_messages() %}
+    <div class="error errorz"> {{ get_flashed_messages() | join(" ") }}</div>
+    {% endif %}
+	<form class="regform login" action="/login" method="POST">
+		<input class="regform__input input-l" type="text" name="username" required autocomplete="off" placeholder="Login">
+		<input class="regform__input input-l" type="password" name="password" required autocomplete="off" placeholder="Password">
+		<input type="submit" value="Log In" class="right__option">
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+/*!
+ * Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../webfonts/fa-regular-400.eot");
+  src: url("../webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), url("../webfonts/fa-regular-400.woff2") format("woff2"), url("../webfonts/fa-regular-400.woff") format("woff"), url("../webfonts/fa-regular-400.ttf") format("truetype"), url("../webfonts/fa-regular-400.svg#fontawesome") format("svg");
+}
+
+.far {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+}
+
+.images {
+  width: 100%;
+  height: auto;
+}
+
+.images__title {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  padding: 0px 30px 0px 30px;
+  line-height: 50px;
+  height: 50px;
+  border-radius: 3.5px;
+  background-color: var(--first);
+  font-family: Roboto;
+  color: #333333;
+  -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.277);
+          box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.277);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.images__title a {
+  color: black;
+}
+
+.images__content {
+  font-family: Roboto;
+  text-align: left;
+  color: #e6e6e6;
+}
+
+.images__text {
+  position: relative;
+  display: inline;
+  color: black;
+  cursor: pointer;
+}
+
+.images__text.active:before {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: -webkit-gradient(linear, left top, right top, from(var(--styleone)), to(var(--styletwo)));
+  background: -o-linear-gradient(left, var(--styleone) 0%, var(--styletwo) 100%);
+  background: linear-gradient(to right, var(--styleone) 0%, var(--styletwo) 100%);
+}
+
+.images__body {
+  height: auto;
+  border-radius: 3.5px;
+}
+
+.content {
+  padding: 20px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: var(--second);
+  -webkit-box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.277);
+          box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.277);
+  border-radius: 3.5px;
+}
+
+.content__image {
+  padding: 10px 10px;
+}
+
+.content__image img {
+  height: 200px;
+  width: 250px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .images__title {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .images__title a {
+    font-size: 16px;
+  }
+
+  .content__image {
+    padding: 5px 5px;
+  }
+
+  .content__image img {
+    height: 100px;
+    width: 130px;
+  }
+}
+
+@media (max-width: 400px) {
+  .images__title {
+    padding: 0px 15px;
+  }
+
+  .content {
+    padding: 5px 0px;
+  }
+}
+
+@media (max-width: 372px) {
+  .images__text i {
+    font-size: 14px;
+  }
+
+  .images__text {
+    font-size: 14px;
+  }
+}

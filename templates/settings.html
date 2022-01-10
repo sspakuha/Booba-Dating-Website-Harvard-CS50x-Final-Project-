@@ -1,0 +1,76 @@
+{% extends "loggedLayout.html" %}
+
+{% block title %} Settings {% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="./static/css/settings.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="main__body">
+	<div class="settings">
+		<div class="settings__body">
+			<div class="settings__title">
+				<a class="settings__text active"><i class="fas fa-user-cog"></i>
+					Settings</a>
+				<a href="{{ user.username }}">Go back</a>
+			</div>
+			<div class="settings__content content">
+				<form class="settings-update" action="/updatedataleft" method="POST">
+					<h1>User information</h1>
+					<label for="country">Country: </label>
+					<input id="country" class="settings-update__input" type="text" value="{% if location.country %}{{ location.country }}{% endif %}" name="country">
+					<label for="city">City: </label>
+					<input id="city" class="settings-update__input" type="text" value="{% if location.city %}{{ location.city }}{% endif %}" name="city">
+					<label for="age">Age: </label>
+					<input id="age" autocomplete="off" class="settings-update__input" type="number" min="18" max="123"
+						value="{{ user.age }}" name="age">
+					<div class="settings-update__select">
+						<div class="settings-update__select">
+							<div>You are</div>
+							<select name="sex">
+								<option value="1" {% if user.gender_id == 1 %}selected{% endif %}>Male</option>
+								<option value="2" {% if user.gender_id == 2 %}selected{% endif %}>Female</option>
+							</select>
+						</div>
+						<div class="settings-update__select">
+							<div class="">You look for</div>
+							<select name="lookingfor">
+								<option value="1" {% if lookingfor.gender_id == 1 %}selected{% endif %}>Male</option>
+								<option value="2" {% if lookingfor.gender_id == 2 %}selected{% endif %}>Female</option>
+							</select>
+						</div>
+					</div>
+					<div class="settings-update__btngroup">
+						<input class="settings-update__btn maindata__btn" type="submit" value="Save">
+					</div>
+				</form>
+				<form class="settings-update" action="/updatepassword" method="POST">
+					<h1>Changing password</h1>
+					<label for="password">Old password </label>
+					<input id="password" class="settings-update__input" type="password" value="" name="password"
+						placeholder="Old password">
+
+					<label for="npassword">New password </label>
+					<input id="npassword" class="settings-update__input" type="password" value="" name="npassword"
+						placeholder="New password">
+
+					<label for="npasswordr">Repeat new password </label>
+					<input id="npasswordr" class="settings-update__input" type="password" value="" name="npasswordr"
+						placeholder="Repeat new password">
+
+					<div class="settings-update__btngroup">
+						<input class="settings-update__btn maindata__btn" type="submit" value="Save">
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="./static/js/settings.js"></script>
+{% endblock %}

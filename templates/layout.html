@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Booba: {% block title %} {% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="./static/css/footer.min.css">
+  <link rel="stylesheet" href="./static/css/ostyle.min.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css"
+		integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+	<meta name="robots" content="noindex, nofollow">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body style="background-color: rgba(255,165,0, 0.05);">
+	<div class="wrapper" style="height: 100%;">
+		<div class="header">
+			<div class="header__c">
+				<div class="header__body">
+					<div class="header__row">
+						<div class="header__langs" style="opacity: 0">
+						</div>
+						<a href="/" class="header__logo"><picture><source srcset="./static/img/ologo.webp" type="image/webp"><img src="./img/ologo.png" alt=""></picture></a>
+            {% block button %}
+
+            {% endblock %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="body__img">
+			<picture><source srcset="./static/img/1231231.webp" type="image/webp"><img src="./img/1231231.jpg" alt=""></picture>
+		</div>
+
+
+		<div class="regwindow">
+
+			<div class="regwindow__body">
+				<div class="regwindow__left left">
+					<div class="left__body">
+						<div class="left__num">100,000,000</div>
+						<div class="left__title">Total users!</div>
+						<button class="left__fb ">
+							Sign in via Facebook
+						</button>
+						<button class="left__twitter">
+							Sign in via Twitter
+						</button>
+						<div class="left__or">OR</div>
+					</div>
+				</div>
+				<div class="regwindow__right">
+          {% block body %}
+
+          {% endblock %}
+				</div>
+			</div>
+		</div>
+    <footer class="footer" style="height: unset; margin-bottom: 10px;">
+	<div class="footer__body">
+    <ul class="footer__list">
+      <li class="footer__item footer__link">Harvard CS50 2021 final project</li>
+		</ul>
+		<ul class="footer__ilist">
+			<li class="footer__iitem"><a href="https://www.facebook.com/" class="footer__link" target="_blank"><i class="fab fa-facebook-square"></i></a></li>
+			<li class="footer__iitem"><a href="https://twitter.com/" class="footer__link" target="_blank"><i class="fab fa-twitter-square"></i></a></li>
+			<li class="footer__iitem"><a href="https://www.instagram.com/" class="footer__link" target="_blank"><i class="fab fa-instagram-square"></i></a></li>
+		</ul>
+	</div>
+</footer>
+	</div>
+  {% block script %}
+  {% endblock %}
+</body>
+
+</html>
